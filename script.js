@@ -124,25 +124,35 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
+        
         const username = document.getElementById("username").value;
-        if (username) {
-            setCookie("username", username, 7); // Store username for 7 days
-            checkUsername(); // Update UI after setting cookie
-            
-            // Calculate score
-            let score = calculateScore();
-            
-            // Save score
-            saveScore(username, score);
-            
-            // Display updated scores
-            displayScores();
-            
-            // Fetch new questions
-            fetchQuestions();
-        } else {
-            alert("Please enter a username");
+        
+        if (!username) {
+            alert("Please enter your name");
+            return;
         }
+        
+        let existingUser = getCookie("username");
+        
+        if (!existingUser) {
+            setCookie("username", username, 7); // Store username for 7 days
+        }
+        
+        checkUsername(); // Update UI after setting cookie
+        
+        // Calculate score
+        let score = calculateScore();
+        
+        // Save score
+        saveScore(username, score);
+        
+        // Display updated scores
+        displayScores();
+        
+        // Fetch new questions
+        fetchQuestions(); // Refresh questions after submission
+        
+        alert("Thanks for playing! Your score has been saved.");
     }
 
     /**
@@ -152,12 +162,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function calculateScore() {
         let score = 0;
         const questions = document.querySelectorAll('#question-container > div');
+        
         questions.forEach((question, index) => {
             const selectedAnswer = question.querySelector(`input[name="answer${index}"]:checked`);
+            
             if (selectedAnswer && selectedAnswer.hasAttribute('data-correct')) {
                 score++;
             }
         });
+        
         return score;
     }
 
@@ -168,7 +181,9 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function saveScore(username, score) {
         let scores = JSON.parse(localStorage.getItem('scores')) || [];
+        
         scores.push({player: username, score: score});
+        
         localStorage.setItem('scores', JSON.stringify(scores));
     }
 
@@ -177,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function checkUsername() {
         const username = getCookie("username");
+        
         if (username) {
             document.getElementById("username").value = username;
             document.getElementById("username").disabled = true;
@@ -199,10 +215,14 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function displayScores() {
         const scoreTable = document.getElementById("score-table").getElementsByTagName('tbody')[0];
+        
         scoreTable.innerHTML = ''; // Clear existing scores
+        
         const scores = JSON.parse(localStorage.getItem('scores')) || [];
+        
         scores.forEach(score => {
             const row = scoreTable.insertRow();
+            
             row.insertCell(0).textContent = score.player;
             row.insertCell(1).textContent = score.score;
         });
