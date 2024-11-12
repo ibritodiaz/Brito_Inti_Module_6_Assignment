@@ -128,10 +128,48 @@ document.addEventListener("DOMContentLoaded", function () {
         if (username) {
             setCookie("username", username, 7); // Store username for 7 days
             checkUsername(); // Update UI after setting cookie
-            // Rest of form submission logic...
+            
+            // Calculate score
+            let score = calculateScore();
+            
+            // Save score
+            saveScore(username, score);
+            
+            // Display updated scores
+            displayScores();
+            
+            // Fetch new questions
+            fetchQuestions();
         } else {
             alert("Please enter a username");
         }
+    }
+
+    /**
+     * Calculates the score based on correct answers.
+     * @returns {number} The calculated score.
+     */
+    function calculateScore() {
+        let score = 0;
+        const questions = document.querySelectorAll('#question-container > div');
+        questions.forEach((question, index) => {
+            const selectedAnswer = question.querySelector(`input[name="answer${index}"]:checked`);
+            if (selectedAnswer && selectedAnswer.hasAttribute('data-correct')) {
+                score++;
+            }
+        });
+        return score;
+    }
+
+    /**
+     * Saves the score to localStorage.
+     * @param {string} username - The player's username.
+     * @param {number} score - The player's score.
+     */
+    function saveScore(username, score) {
+        let scores = JSON.parse(localStorage.getItem('scores')) || [];
+        scores.push({player: username, score: score});
+        localStorage.setItem('scores', JSON.stringify(scores));
     }
 
     /**
