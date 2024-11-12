@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Fetch new questions
         fetchQuestions(); // Refresh questions after submission
         
-        alert(`Thanks for playing! Your score is ${score} out of 10.`);
+        alert(`Thanks for playing! Your score is ${score} out of ${document.querySelectorAll('#question-container > div').length}.`);
     }
 
     /**
@@ -183,6 +183,13 @@ document.addEventListener("DOMContentLoaded", function () {
         let scores = JSON.parse(localStorage.getItem('scores')) || [];
         
         scores.push({player: username, score: score});
+        
+        // Sort scores in descending order and keep only top 10 scores
+        scores.sort((a, b) => b.score - a.score);
+        
+        if (scores.length > 10) {
+            scores.pop(); // Remove lowest score if more than 10 entries
+        }
         
         localStorage.setItem('scores', JSON.stringify(scores));
     }
@@ -220,11 +227,12 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const scores = JSON.parse(localStorage.getItem('scores')) || [];
         
-        scores.forEach(score => {
+        scores.forEach((score, index) => {
             const row = scoreTable.insertRow();
             
-            row.insertCell(0).textContent = score.player;
-            row.insertCell(1).textContent = score.score;
+            row.insertCell(0).textContent = index + 1; // Rank
+            row.insertCell(1).textContent = score.player;
+            row.insertCell(2).textContent = score.score;
         });
     }
 });
