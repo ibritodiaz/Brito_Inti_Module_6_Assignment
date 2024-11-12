@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Fetch new questions
         fetchQuestions(); // Refresh questions after submission
         
-        alert("Thanks for playing! Your score has been saved.");
+        alert(`Thanks for playing! Your score is ${score} out of 10.`);
     }
 
     /**
