@@ -140,16 +140,19 @@ document.addEventListener("DOMContentLoaded", function () {
         
         checkUsername(); // Update UI after setting cookie
         
-        // TODO: Calculate score
-        let score = calculateScore(); // Placeholder for score calculation
+        // Calculate score
+        let score = calculateScore();
         
-        // TODO: Save score
-        saveScore(username, score); // Placeholder for saving score
+        // Save score
+        saveScore(username, score);
         
-        // TODO: Fetch new questions
+        // Display updated scores
+        displayScores();
+        
+        // Fetch new questions
         fetchQuestions(); // Refresh questions after submission
         
-        alert("Thanks for playing! We'll add score calculation soon.");
+        alert("Thanks for playing! Your score has been saved.");
     }
 
     /**
